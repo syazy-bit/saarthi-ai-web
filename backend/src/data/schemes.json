@@ -1,0 +1,100 @@
+[
+  {
+    "id": "orunodoi",
+    "name": "Orunodoi Scheme",
+    "description": "Financial assistance of ₹1,250/month to economically weaker families in Assam.",
+    "eligibility": {
+      "state": "Assam",
+      "max_annual_income": 200000,
+      "target_groups": ["women", "all"]
+    },
+    "documents": [
+      { "name": "Aadhaar Card", "description": "A unique 12-digit identification number issued by UIDAI." },
+      { "name": "Bank Passbook", "description": "First page of your bank account passbook showing account number and IFSC code." },
+      { "name": "Income Certificate", "description": "Certificate from Circle Officer proving annual family income is below ₹2 Lakh." },
+      { "name": "Residential Proof", "description": "Proof that you are a permanent resident of Assam (e.g., Voter ID, Domicile Certificate)." }
+    ],
+    "steps": [
+      "Visit your nearest Deputy Commissioner's Office or a designated camp.",
+      "Fill the Orunodoi application form (available at the office or camp).",
+      "Attach self-attested copies of all required documents.",
+      "Submit the form and collect the acknowledgement slip.",
+      "Wait for verification. The status will be updated via SMS."
+    ],
+    "official_link": "https://orunodoi.assam.gov.in/"
+  },
+  {
+    "id": "pragyan-bharati",
+    "name": "Pragyan Bharati Scheme",
+    "description": "Provides free textbooks and uniforms to students in government and provincialised schools in Assam.",
+    "eligibility": {
+      "state": "Assam",
+      "occupation": "student",
+      "institution_type": ["government_school", "provincialised_school"]
+    },
+    "documents": [
+      { "name": "School Enrollment Certificate", "description": "Certificate from the school confirming the student's enrollment." },
+      { "name": "Aadhaar Card", "description": "Student's Aadhaar card for identity verification." }
+    ],
+    "steps": [
+      "Ensure you are enrolled in a government or provincialised school in Assam.",
+      "No separate application is needed. The school administration distributes materials.",
+      "Collect textbooks and uniforms from your school at the start of the academic year."
+    ],
+    "official_link": "https://education.assam.gov.in/"
+  },
+  {
+    "id": "kanyashree",
+    "name": "Kanyashree Prakalpa (West Bengal)",
+    "description": "Annual scholarship for girls aged 13-18 and one-time grant for higher education.",
+    "eligibility": {
+      "state": "West Bengal",
+      "gender": "female",
+      "min_age": 13,
+      "max_age": 18,
+      "max_annual_income": 120000,
+      "occupation": "student"
+    },
+    "documents": [
+      { "name": "Aadhaar Card", "description": "Student's Aadhaar for identity." },
+      { "name": "School ID Card", "description": "Proof of enrollment in a recognized institution." },
+      { "name": "Income Certificate", "description": "Family income certificate from competent authority." },
+      { "name": "Bank Account Details", "description": "Student's own bank account passbook." }
+    ],
+    "steps": [
+      "Visit the official Kanyashree portal: https://wbkanyashree.gov.in",
+      "Register with your school's help through the 'Applicant Corner'.",
+      "Fill in personal, educational, and bank details.",
+      "Upload required documents.",
+      "Submit and track application status online."
+    ],
+    "official_link": "https://wbkanyashree.gov.in/"
+  },
+  {
+    "id": "arundhati-gold",
+    "name": "Arundhati Gold Scheme",
+    "description": "Provides 1 Tola (10 grams) of gold to brides from economically weaker sections in Assam.",
+    "eligibility": {
+      "state": "Assam",
+      "gender": "female",
+      "min_age": 18,
+      "max_annual_income": 500000,
+      "special_condition": "registered_marriage"
+    },
+    "documents": [
+      { "name": "Special Marriage Registration Certificate", "description": "Marriage must be registered under the Special Marriage Act." },
+      { "name": "Aadhaar Card (Bride)", "description": "Bride's Aadhaar for identity." },
+      { "name": "Aadhaar Card (Groom)", "description": "Groom's Aadhaar for identity." },
+      { "name": "PAN Card (Optional)", "description": "For gold purchase formalities." },
+      { "name": "Income Certificate", "description": "Family income certificate of the bride's family." }
+    ],
+    "steps": [
+      "Register your marriage under the Special Marriage Act at the local registrar's office.",
+      "Visit the DC Office or apply online at the official Assam government portal.",
+      "Submit the application with all required documents.",
+      "After verification, receive the gold voucher.",
+      "Redeem the voucher at an authorized jeweler."
+    ],
+    "official_link": "https://arundhati.assam.gov.in/"
+  }
+]

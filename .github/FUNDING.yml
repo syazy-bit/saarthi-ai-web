@@ -1,0 +1,16 @@
+# GitHub Sponsors configuration
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+
+# Supported platforms:
+# github: [username1, username2]
+# patreon: username
+# open_collective: project-name
+# ko_fi: username
+# tidelift: platform/package
+# community_bridge: project-name
+# liberapay: username
+# issuehunt: username
+# custom: ['https://example.com', 'https://example2.com']
+
+# Replace with your GitHub username
+github: [syazy-bit]

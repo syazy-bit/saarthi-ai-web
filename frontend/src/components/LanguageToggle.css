@@ -1,0 +1,40 @@
+/* Language Toggle - Modern Redesign */
+
+.language-toggle {
+  display: flex;
+  gap: var(--space-2);
+  background: var(--bg-card);
+  padding: var(--space-1);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.language-btn {
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-smooth);
+  position: relative;
+  z-index: 1;
+}
+
+.language-btn.active {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+}
+
+.language-btn:hover:not(.active) {
+  color: var(--text-primary);
+}
+
+.language-btn.active {
+  animation: scaleIn 0.3s var(--ease-bounce);
+}
