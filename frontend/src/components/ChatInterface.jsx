@@ -23,8 +23,8 @@ const ChatInterface = ({ messages, onSendMessage, isLoading, language }) => {
   };
 
   const placeholders = {
-    English: "Tell me about yourself (e.g., 'I am a 19 year old student from Assam')",
-    Assamese: "আপোনাৰ বিষয়ে কওক (যেনে, 'মই অসমৰ ১৯ বছৰীয়া ছাত্ৰ')"
+    English: "Tell me about yourself",
+    Assamese: "আপোনাৰ বিষয়ে কওক"
   };
 
   return (
@@ -32,7 +32,6 @@ const ChatInterface = ({ messages, onSendMessage, isLoading, language }) => {
       {/* Welcome Message */}
       {messages.length === 0 && (
         <div className="welcome-section">
-          <div className="welcome-icon">🤝</div>
           <h2 className="welcome-title">
             {language === 'Assamese' ? 'নমস্কাৰ!' : 'Welcome!'}
           </h2>

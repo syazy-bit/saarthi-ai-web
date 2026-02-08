@@ -4,13 +4,13 @@ const LanguageToggle = ({ language, onLanguageChange }) => {
   return (
     <div className="language-toggle">
       <button 
-        className={`lang-btn ${language === 'English' ? 'active' : ''}`}
+        className={`language-btn ${language === 'English' ? 'active' : ''}`}
         onClick={() => onLanguageChange('English')}
       >
         EN
       </button>
       <button 
-        className={`lang-btn lang-as ${language === 'Assamese' ? 'active' : ''}`}
+        className={`language-btn lang-as ${language === 'Assamese' ? 'active' : ''}`}
         onClick={() => onLanguageChange('Assamese')}
       >
         অসমীয়া

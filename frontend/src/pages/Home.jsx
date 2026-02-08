@@ -59,7 +59,6 @@ function Home() {
       <header className="app-header glass-card">
         <div className="header-content">
           <div className="logo">
-            <span className="logo-icon">🤝</span>
             <h1>Saarthi AI</h1>
           </div>
           <p className="tagline">Your Guide to Government Schemes</p>
