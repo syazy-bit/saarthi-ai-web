@@ -6,7 +6,7 @@
     "eligibility": {
       "state": "Assam",
       "max_annual_income": 200000,
-      "target_groups": ["women", "all"]
+      "target_groups": ["women"]
     },
     "documents": [
       { "name": "Aadhaar Card", "description": "A unique 12-digit identification number issued by UIDAI." },

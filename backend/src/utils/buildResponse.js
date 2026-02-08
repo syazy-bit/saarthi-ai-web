@@ -6,7 +6,8 @@
  */
 function buildChatResponse(eligibleSchemes, potentialSchemes) {
   if (eligibleSchemes.length > 0) {
-    return `Based on the information you provided, I found ${eligibleSchemes.length} scheme(s) you may be eligible for!`;
+    const schemeNames = eligibleSchemes.map(s => `**${s.name}**`).join(', ');
+    return `Based on the information you provided, I found ${eligibleSchemes.length} scheme(s) you may be eligible for: ${schemeNames}!`;
   } else if (potentialSchemes.length > 0) {
     return `I found some schemes that might be relevant, but I need a bit more information to confirm your eligibility.`;
   } else {
