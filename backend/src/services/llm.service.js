@@ -1,7 +1,38 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
+
+// Env-based model configuration
+const MODEL_NAME = process.env.GEMINI_MODEL || "gemini-2.5-flash-lite";
+const model = genAI.getGenerativeModel({ model: MODEL_NAME });
+
+/**
+ * Safely extracts text from a Gemini API result.
+ * Prevents errors when parts of the response are missing or blocked.
+ */
+function safeExtractText(result, fallback = "") {
+  try {
+    return result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || fallback;
+  } catch (error) {
+    console.error("Safe extraction error:", error.message);
+    return fallback;
+  }
+}
+
+/**
+ * Safely parses JSON from a string, stripping markdown if present.
+ */
+function safeParseJSON(text, fallback = {}) {
+  if (!text) return fallback;
+  try {
+    // Strip markdown code blocks if present
+    const cleaned = text.replace(/```json\n?|\n?```/g, '').trim();
+    return JSON.parse(cleaned);
+  } catch (error) {
+    console.error("Safe JSON parse error:", error.message);
+    return fallback;
+  }
+}
 
 /**
  * Translates text to English if it's in another language.
@@ -25,21 +56,14 @@ Text to analyze:
 Return ONLY the JSON, no other text.`;
 
     const result = await model.generateContent(prompt);
-    const response = result?.response?.text();
-
+    const response = safeExtractText(result, "");
+    
     if (!response) {
       console.warn("Empty response from Gemini API for translation");
       return { original_language: "English", english_text: text };
     }
 
-    try {
-      // Clean the response - remove markdown code blocks if present
-      const cleanedResponse = response.replace(/```json\n?|\n?```/g, '').trim();
-      return JSON.parse(cleanedResponse);
-    } catch (e) {
-      console.error("Failed to parse translation response:", response);
-      return { original_language: "English", english_text: text };
-    }
+    return safeParseJSON(response, { original_language: "English", english_text: text });
   } catch (error) {
     console.error("Translation error:", error.message);
     return { original_language: "English", english_text: text };
@@ -50,6 +74,15 @@ Return ONLY the JSON, no other text.`;
  * Extracts structured user profile data from their message.
  */
 async function extractUserProfile(englishText) {
+  const defaultProfile = {
+    age: null,
+    gender: null,
+    state: null,
+    occupation: null,
+    annual_income: null,
+    special_conditions: []
+  };
+
   try {
     const prompt = `You are a data extraction assistant for a government scheme eligibility system.
 Extract the following information from the user's message. If information is not provided, use null.
@@ -68,44 +101,17 @@ User message:
 Return ONLY a valid JSON object with these fields, no other text.`;
 
     const result = await model.generateContent(prompt);
-    const response = result?.response?.text();
+    const response = safeExtractText(result, "");
 
     if (!response) {
       console.warn("Empty response from Gemini API for profile extraction");
-      return {
-        age: null,
-        gender: null,
-        state: null,
-        occupation: null,
-        annual_income: null,
-        special_conditions: []
-      };
+      return defaultProfile;
     }
 
-    try {
-      const cleanedResponse = response.replace(/```json\n?|\n?```/g, '').trim();
-      return JSON.parse(cleanedResponse);
-    } catch (e) {
-      console.error("Failed to parse profile extraction:", response);
-      return {
-        age: null,
-        gender: null,
-        state: null,
-        occupation: null,
-        annual_income: null,
-        special_conditions: []
-      };
-    }
+    return safeParseJSON(response, defaultProfile);
   } catch (error) {
     console.error("Profile extraction error:", error.message);
-    return {
-      age: null,
-      gender: null,
-      state: null,
-      occupation: null,
-      annual_income: null,
-      special_conditions: []
-    };
+    return defaultProfile;
   }
 }
 
@@ -132,7 +138,7 @@ ${language !== "English" ? `Translate your response to ${language}.` : ""}
 Keep it simple and encouraging. Do not use complex legal terms.`;
 
     const result = await model.generateContent(prompt);
-    const response = result?.response?.text();
+    const response = safeExtractText(result, "");
     
     if (!response) {
       return `You may be eligible for ${scheme.name}. This scheme provides ${scheme.description}.`;
@@ -145,9 +151,6 @@ Keep it simple and encouraging. Do not use complex legal terms.`;
   }
 }
 
-/**
- * Translates text from English to the target language.
- */
 /**
  * Translates text from English to the target language.
  */
@@ -165,7 +168,7 @@ Text:
 "${text}"`;
 
     const result = await model.generateContent(prompt);
-    const response = result?.response?.text();
+    const response = safeExtractText(result, "");
     
     if (!response) {
       console.warn("Empty response from Gemini API for translation to", targetLanguage);
@@ -227,7 +230,7 @@ INSTRUCTIONS:
 ${language !== "English" ? `IMPORTANT: Respond entirely in ${language}.` : ""}`;
 
     const result = await model.generateContent(prompt);
-    const response = result?.response?.text();
+    const response = safeExtractText(result, "");
     
     if (!response) {
       return "I'm sorry, I couldn't generate a response. Could you please rephrase your question?";
