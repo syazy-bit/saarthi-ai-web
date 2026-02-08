@@ -19,7 +19,8 @@ function Home() {
     setIsLoading(true);
 
     try {
-      const data = await sendChatMessage(message);
+      // Send message with context from previous schemes
+      const data = await sendChatMessage(message, eligibleSchemes, potentialSchemes);
 
       // Update language if detected
       if (data.detected_language) {
@@ -35,9 +36,16 @@ function Home() {
       };
       setMessages(prev => [...prev, aiMsg]);
 
-      // Update schemes
-      setEligibleSchemes(data.eligible_schemes || []);
-      setPotentialSchemes(data.potential_schemes || []);
+      // Only update schemes if we got new matches
+      // This preserves context for follow-up questions
+      if (data.eligible_schemes && data.eligible_schemes.length > 0) {
+        setEligibleSchemes(data.eligible_schemes);
+      }
+      if (data.potential_schemes && data.potential_schemes.length > 0) {
+        setPotentialSchemes(data.potential_schemes);
+      }
+      
+      // Always update profile
       setUserProfile(data.extracted_profile);
 
     } catch (error) {

@@ -2,7 +2,8 @@ const {
   translateToEnglish,
   extractUserProfile,
   generateEligibilityExplanation,
-  translateFromEnglish
+  translateFromEnglish,
+  answerQuestionWithContext
 } = require("../services/llm.service");
 const { checkEligibility } = require("../services/eligibility.service");
 const { buildChatResponse } = require("../utils/buildResponse");
@@ -13,13 +14,17 @@ const { buildChatResponse } = require("../utils/buildResponse");
  */
 async function handleChat(req, res) {
   try {
-    const { message, conversationHistory = [] } = req.body;
+    const { message, conversationHistory = [], lastEligibleSchemes = [], lastPotentialSchemes = [] } = req.body;
 
     if (!message) {
       return res.status(400).json({ error: "Message is required" });
     }
 
     console.log("📩 Incoming message:", message);
+    console.log("Context schemes:", { 
+      lastEligible: lastEligibleSchemes.length, 
+      lastPotential: lastPotentialSchemes.length 
+    });
 
     // Step 1: Translate to English and detect language (with fallback)
     let userLanguage = "English";
@@ -90,9 +95,35 @@ async function handleChat(req, res) {
 
     // Step 6: Build response
     let responseText = buildChatResponse(eligibleSchemes, potentialSchemes);
+    let usedContextFallback = false;
 
-    // Translate response if needed (with fallback)
-    if (userLanguage !== "English") {
+    // If no NEW eligible schemes matched and we have previous context,
+    // use AI to answer the question using that context.
+    if (eligibleSchemes.length === 0 && (lastEligibleSchemes.length > 0 || lastPotentialSchemes.length > 0)) {
+      console.log("🤖 Attempting context-aware fallback for follow-up question...");
+      try {
+        const fallbackResponse = await answerQuestionWithContext(
+          englishMessage,
+          lastEligibleSchemes,
+          lastPotentialSchemes,
+          userLanguage
+        );
+        
+        // Only use the fallback if it actually provided an answer
+        if (fallbackResponse && !fallbackResponse.includes("I don't have enough information")) {
+          console.log("✅ Using context-aware fallback response");
+          responseText = fallbackResponse;
+          usedContextFallback = true;
+        } else {
+          console.log("⏭️ Fallback couldn't answer the question, using default response");
+        }
+      } catch (error) {
+        console.warn("⚠️ Context fallback failed:", error.message);
+      }
+    }
+
+    // Translate response if needed (with fallback) - only if we didn't use context fallback
+    if (userLanguage !== "English" && !usedContextFallback) {
       try {
         responseText = await translateFromEnglish(responseText, userLanguage);
       } catch (error) {

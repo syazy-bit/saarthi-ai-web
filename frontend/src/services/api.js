@@ -3,13 +3,19 @@ const API_BASE_URL = 'http://localhost:3001/api';
 /**
  * Send a chat message to the backend
  * @param {string} message - User's message
+ * @param {Array} lastEligibleSchemes - Previously found eligible schemes for context
+ * @param {Array} lastPotentialSchemes - Previously found potential schemes for context
  * @returns {Promise<Object>} API response with eligibility results
  */
-export async function sendChatMessage(message) {
+export async function sendChatMessage(message, lastEligibleSchemes = [], lastPotentialSchemes = []) {
   const response = await fetch(`${API_BASE_URL}/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ message })
+    body: JSON.stringify({ 
+      message,
+      lastEligibleSchemes,
+      lastPotentialSchemes
+    })
   });
 
   if (!response.ok) {
