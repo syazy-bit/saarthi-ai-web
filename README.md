@@ -1,139 +1,149 @@
 # Saarthi AI - Government Scheme Discovery Assistant
 
-![Saarthi AI](https://img.shields.io/badge/Status-MVP-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-MVP-blue?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![AI](https://img.shields.io/badge/Powered%20By-Gemini%202.5%20Flash%20Lite-orange?style=for-the-badge)
+![Stack](https://img.shields.io/badge/Stack-React%2019%20%2B%20Node%205.2-blueviolet?style=for-the-badge)
 
-**Saarthi AI** is a multilingual AI assistant that helps citizens discover government schemes, scholarships, and welfare programs they are eligible for. Built with a focus on **transparency, trust, and accessibility**.
+**Saarthi AI** is a professional-grade, multilingual AI assistant designed to bridge the gap between citizens and government welfare programs. It empowers users to discover schemes, scholarships, and grants they are eligible for through natural language conversation, currently focused on the state of **Assam**.
 
-## 🌟 Features
+---
 
-- **Multilingual Support**: English and Assamese (expandable to more languages)
-- **AI-Powered Extraction**: Uses Gemini AI to extract user information from natural language
-- **Rule-Based Eligibility**: Deterministic, explainable eligibility matching (not AI black box)
-- **Vibrant Modern UI**: Professional gradient design with smooth animations
-- **Scheme Discovery**: Browse and search government schemes
-- **Trust Indicators**: Clear badges showing rule-based decisions
+## 🏗️ System Architecture
+
+Saarthi AI uses a unique "Pivot-Language" architecture and a deterministic eligibility engine to ensure both accessibility and accuracy.
+
+```mermaid
+graph TD
+    User([User]) <--> Frontend[React Frontend]
+    Frontend <--> Backend[Node.js Backend]
+    
+    subgraph "AI & Logic Layer"
+        Backend <--> Gemini_TR[Gemini AI: Translation]
+        Backend <--> Gemini_EXT[Gemini AI: Profile Extraction]
+        Backend --> Logic[Deterministic Eligibility Engine]
+    end
+    
+    Logic --> Data[(Schemes JSON Database)]
+    Logic --> Result[Explainable Results]
+    Result --> Backend
+```
+
+### The Multilingual Pipeline
+1.  **Detection**: The user speaks in English, Assamese, or other regional languages.
+2.  **Translation (Pivot)**: Gemini AI translates the input into English (the pivot language) while detecting the source language.
+3.  **Extraction**: A second specialized Gemini prompt extracts structured profile data (age, income, occupation, etc.) from the English text.
+4.  **Processing**: The backend runs this profile through a deterministic rule-based engine.
+5.  **Re-translation**: Results and explanations are translated back to the user's original language.
+
+---
+
+## 🔒 Deterministic vs. Generative AI
+
+Unlike generic chatbots that might "hallucinate" eligibility, Saarthi AI separates **Language Understanding** from **Decision Logic**:
+
+*   **Generative AI (Gemini)**: Used strictly for Natural Language Understanding (NLU) and translation. It understands *what* the user is saying.
+*   **Deterministic Engine (Custom Logic)**: Used for eligibility matching. It follows strict rules defined in the database. If a scheme requires "Age > 18", the logic checks this numerically. 
+*   **Trust Indicators**: Every result includes clear "Reasons for Eligibility" or "Missing Information" badges, ensuring transparency.
+
+---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **React** with Vite
-- **Vanilla CSS** with modern design tokens
-- **Google Fonts** (Space Grotesk, Poppins, Noto Sans Bengali)
+- **React 19**: Modern component-based architecture.
+- **Vite**: Ultra-fast build tool for development.
+- **Vanilla CSS**: Custom design system with modern tokens (no bulky frameworks).
+- **Typography**: Space Grotesk (General), Poppins (Headings), Noto Sans Bengali (Multilingual).
 
 ### Backend
-- **Node.js** + Express
-- **Gemini 2.5 Flash Lite** for NLU
-- **JSON-based scheme database** (easily upgradable to SQL/NoSQL)
+- **Node.js 18+**: Robust server-side environment.
+- **Express 5.2**: Lightweight web framework for API routing.
+- **Google Generative AI SDK**: Direct integration with Gemini 2.5 Flash Lite.
+- **JSON-based Data**: High-performance, schema-less initial data storage for schemes.
+
+---
 
 ## 📁 Project Structure
 
-```
+```text
 saarthi-ai-web/
 ├── frontend/
 │   ├── src/
-│   │   ├── components/    # ChatInterface, SchemeCard, LanguageToggle
-│   │   ├── pages/         # Home.jsx
-│   │   ├── services/      # api.js (centralized API calls)
-│   │   └── styles/        # main.css (design system)
-│   └── package.json
+│   │   ├── components/    # Reusable UI (ChatInterface, SchemeCard, etc.)
+│   │   ├── services/      # api.js - Centralized Axios/Fetch calls
+│   │   ├── styles/        # main.css - Design System (Gradients, Tokens)
+│   │   └── App.jsx        # Main application entry
+│   └── package.json       # Frontend dependencies (React, Vite)
 ├── backend/
 │   ├── src/
-│   │   ├── routes/        # API routes
-│   │   ├── controllers/   # Request handlers
-│   │   ├── services/      # LLM & eligibility logic
-│   │   ├── data/          # schemes.json
-│   │   └── utils/         # Helper functions
-│   └── package.json
-└── README.md
+│   │   ├── routes/        # API Endpoints (/api/chat, /api/schemes)
+│   │   ├── controllers/   # Request orchestration logic
+│   │   ├── services/      # CORE LOGIC: llm.service.js, eligibility.service.js
+│   │   └── data/          # schemes.json - The official scheme database
+│   └── .env               # Configuration (API Keys, PORT)
+└── README.md              # Documentation
 ```
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 16+ installed
-- Gemini API key ([Get one here](https://aistudio.google.com/app/apikey))
+- Node.js (v18.x or higher)
+- npm or yarn
+- A Google Gemini API Key from [Google AI Studio](https://aistudio.google.com/app/apikey)
 
-### Installation
+### 1. Repository Setup
+```bash
+git clone https://github.com/YOUR_USERNAME/saarthi-ai-web.git
+cd saarthi-ai-web
+```
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/saarthi-ai-web.git
-   cd saarthi-ai-web
-   ```
-
-2. **Setup Backend**
-   ```bash
-   cd backend
-   npm install
-   ```
-
-3. **Configure Environment Variables**
-   
-   Create `backend/.env`:
-   ```env
-   GEMINI_API_KEY=your_gemini_api_key_here
-   PORT=3001
-   ```
-
-4. **Setup Frontend**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
-
-### Running the Application
-
-**Terminal 1 - Backend:**
+### 2. Backend Configuration
 ```bash
 cd backend
+npm install
+```
+Create a `.env` file in the `backend/` directory:
+```env
+GEMINI_API_KEY=your_actual_api_key_here
+PORT=3001
+GEMINI_MODEL=gemini-2.5-flash-lite
+```
+Start the backend:
+```bash
 npm start
 ```
-Server runs on `http://localhost:3001`
 
-**Terminal 2 - Frontend:**
+### 3. Frontend Configuration
+Open a new terminal:
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
-App opens at `http://localhost:5173`
-
-## 📡 API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/health` | GET | Health check |
-| `/api/schemes` | GET | List all schemes |
-| `/api/schemes/:id` | GET | Get scheme by ID |
-| `/api/chat` | POST | Main chat endpoint |
-
-## 🎨 Design Philosophy
-
-- **Vibrant & Modern**: Moving away from generic purple gradients to dynamic indigo-purple-pink palettes
-- **Trusted Expert**: Professional, trustworthy, distinct visual identity
-- **Accessible**: Clear typography, good contrast, readable UI
-
-## 🔒 Safety & Trust
-
-- **Rule-Based Eligibility**: No AI hallucinations in eligibility decisions
-- **Graceful Degradation**: If AI fails, system still responds (no 500 errors)
-- **Transparent**: Shows why users qualify for schemes
-- **User Control**: AI assists, official authorities decide final eligibility
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🙏 Acknowledgments
-
-- Built with Google's Gemini AI
-- Focused on serving citizens of Assam (expandable to all of India)
-- Inspired by the need for accessible government information
+The application will be accessible at `http://localhost:5173`.
 
 ---
 
-**Made with ❤️ for the people of Assam**
+## 📡 API Reference
+
+| Endpoint | Method | Payload | Description |
+| :--- | :--- | :--- | :--- |
+| `/api/chat` | POST | `{ "message": string, "language": string }` | Processes AI chat and returns eligibility. |
+| `/api/schemes` | GET | - | Returns the full list of available schemes. |
+| `/api/schemes/:id` | GET | - | Returns detailed information for a specific scheme. |
+| `/api/health` | GET | - | System health check and uptime. |
+
+---
+
+## 🗺️ Roadmap
+- [ ] **SQL Migration**: Transitioning from JSON to PostgreSQL for enterprise-level scaling.
+- [ ] **Voice Integration**: Direct Assamese/Hindi speech-to-text.
+- [ ] **Document Assistant**: Automatic OCR for checking document validity.
+- [ ] **Admin Dashboard**: For government officials to add/update schemes easily.
+
+---
+
+Documentation maintained by the Saarthi AI Team.
